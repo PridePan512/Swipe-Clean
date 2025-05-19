@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@color/bg_window"
+    android:foreground="@drawable/bg_cardview_foreground"
+    android:paddingHorizontal="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/v_cover"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_shape_swipe_clean_album_cover"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/iv_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:scaleType="centerCrop"
+            app:round="8dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/v_completed"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:alpha="0.6"
+        android:background="@drawable/bg_shape_corner_black_8"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/v_cover"
+        app:layout_constraintEnd_toEndOf="@id/v_cover"
+        app:layout_constraintStart_toStartOf="@id/v_cover"
+        app:layout_constraintTop_toTopOf="@id/v_cover" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_completed"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:src="@drawable/ic_vector_swipe_clean_completed_album"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/v_cover"
+        app:layout_constraintEnd_toEndOf="@id/v_cover"
+        app:layout_constraintStart_toStartOf="@id/v_cover"
+        app:layout_constraintTop_toTopOf="@id/v_cover" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/text_main"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/tv_progress"
+        app:layout_constraintStart_toEndOf="@id/v_cover"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="November , 2024" />
+
+    <TextView
+        android:id="@+id/tv_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/text_sub"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/lp_progress"
+        app:layout_constraintStart_toStartOf="@id/tv_date"
+        app:layout_constraintTop_toBottomOf="@id/tv_date"
+        tools:text="0/615 items" />
+
+    <com.example.swipeclean.view.DualProgressIndicator
+        android:id="@+id/lp_progress"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="8dp"
+        app:indicatorColor="@color/swipe_clean_progress_deleted"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintCircleRadius="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_date"
+        app:layout_constraintTop_toBottomOf="@id/tv_progress"
+        app:trackColor="@color/bg_button"
+        app:trackCornerRadius="3dp"
+        app:trackThickness="6dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/border_weak"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
