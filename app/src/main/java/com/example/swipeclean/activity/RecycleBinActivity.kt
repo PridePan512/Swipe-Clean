@@ -3,15 +3,15 @@ package com.example.swipeclean.activity
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +20,13 @@ import com.example.swipeclean.adapter.SwipeCleanRecycleBinAdapter
 import com.example.swipeclean.business.AlbumController
 import com.example.swipeclean.business.SwipeCleanConfigHost
 import com.example.swipeclean.model.Album
+import com.example.swipeclean.model.Constants.KEY_INTENT_ALBUM_ID
+import com.example.swipeclean.model.Constants.MIN_SHOW_LOADING_TIME
 import com.example.swipeclean.model.Photo
 import com.example.swipeclean.utils.MediaStoreUtils
 import com.example.swipeclean.utils.StringUtils.getHumanFriendlyByteCount
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.loadingindicator.LoadingIndicator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,17 +36,13 @@ import java.util.stream.Collectors
 
 class RecycleBinActivity : AppCompatActivity() {
 
-    val KEY_INTENT_ALBUM_ID: String = "album_id"
-    private val PROGRESS_DIALOG_TAG_DELETE_IMAGE: String = "deleting_images"
-    private val PROGRESS_DIALOG_TAG_RESTORE_IMAGE: String = "restoring_images"
-    private val MIN_PROGRESS_TIME = 2000L
-
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: SwipeCleanRecycleBinAdapter
     private lateinit var mEmptyTrashButton: View
     private lateinit var mRestoreAllButton: View
     private lateinit var mBackButton: ImageView
     private lateinit var mTitleTextView: TextView
+    private lateinit var mLoadingView: LoadingIndicator
 
     private lateinit var mAlbum: Album
 
@@ -68,12 +68,20 @@ class RecycleBinActivity : AppCompatActivity() {
             .collect(Collectors.toList()))
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (mLoadingView.isVisible) {
+            return true
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     private fun initView() {
         mRecyclerView = findViewById(R.id.v_recyclerview)
         mEmptyTrashButton = findViewById(R.id.btn_empty_trash)
         mRestoreAllButton = findViewById(R.id.btn_restore_all)
         mBackButton = findViewById(R.id.iv_back)
         mTitleTextView = findViewById(R.id.tv_title)
+        mLoadingView = findViewById(R.id.v_loading)
 
         mBackButton.setOnClickListener { finish() }
     }
@@ -121,112 +129,81 @@ class RecycleBinActivity : AppCompatActivity() {
         showTotalSize(mAdapter.totalSize)
 
         mEmptyTrashButton.setOnClickListener {
-            AlertDialog.Builder(this)
+            MaterialAlertDialogBuilder(this)
                 .setTitle("删除图片")
                 .setMessage("一旦删除，图像将无法恢复")
                 .setPositiveButton(
                     "删除"
                 ) { _, _ ->
-                    run {
-                        lifecycleScope.launch {
-                            val alertDialog: AlertDialog =
-                                AlertDialog.Builder(this@RecycleBinActivity).create();
-                            alertDialog.setView(
-                                LayoutInflater.from(this@RecycleBinActivity)
-                                    .inflate(R.layout.view_progress_dialog, null)
-                            )
-                            alertDialog.setCancelable(false)
-                            alertDialog.show()
-                            val startTime = SystemClock.elapsedRealtime()
+                    mLoadingView.visibility = View.VISIBLE
+                    val startTime = SystemClock.elapsedRealtime()
 
-                            SwipeCleanConfigHost.setCleanedSize(
-                                mAdapter.getTotalSize(),
-                                this@RecycleBinActivity
-                            )
-                            withContext(Dispatchers.IO) {
-                                val destPaths: MutableList<String> = ArrayList()
-                                var finishCount = 0
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        SwipeCleanConfigHost.setCleanedSize(
+                            mAdapter.getTotalSize(),
+                            this@RecycleBinActivity
+                        )
+                        val destPaths: MutableList<String> = ArrayList()
+                        var finishCount = 0
 
-                                for (photo in deletedPhotos) {
-                                    finishCount++
-                                    destPaths.add(photo.path)
-                                    mAlbum.photos.remove(photo)
-                                    AlbumController.getInstance(this@RecycleBinActivity)
-                                        .cleanCompletedPhoto(photo)
+                        for (photo in deletedPhotos) {
+                            finishCount++
+                            destPaths.add(photo.path)
+                            mAlbum.photos.remove(photo)
+                            AlbumController.getInstance(this@RecycleBinActivity)
+                                .cleanCompletedPhoto(photo)
 
-                                    val file = File(photo.path)
-                                    if (file.exists()) {
-                                        file.delete()
-                                    }
-
-                                    if (finishCount % 100 == 0) {
-                                        MediaStoreUtils.scanSync(this@RecycleBinActivity, destPaths)
-                                        destPaths.clear()
-                                    }
-                                }
-
-                                MediaStoreUtils.scanSync(this@RecycleBinActivity, destPaths)
-
-                                runOnUiThread {
-                                    val spendTime = SystemClock.elapsedRealtime() - startTime
-                                    if (spendTime < MIN_PROGRESS_TIME) {
-                                        mEmptyTrashButton.postDelayed(
-                                            {
-                                                alertDialog.dismiss()
-                                                showDeleteResult()
-                                            },
-                                            MIN_PROGRESS_TIME - spendTime
-                                        )
-
-                                    } else {
-                                        alertDialog.dismiss()
-                                        showDeleteResult()
-                                    }
-                                }
+                            val file = File(photo.path)
+                            if (file.exists()) {
+                                file.delete()
                             }
+
+                            if (finishCount % 100 == 0) {
+                                MediaStoreUtils.scanSync(this@RecycleBinActivity, destPaths)
+                                destPaths.clear()
+                            }
+                        }
+
+                        MediaStoreUtils.scanSync(this@RecycleBinActivity, destPaths)
+
+                        runOnUiThread {
+                            val spendTime = SystemClock.elapsedRealtime() - startTime
+                            mEmptyTrashButton.postDelayed(
+                                {
+                                    mLoadingView.visibility = View.GONE
+                                    showDeleteResult()
+                                },
+                                MIN_SHOW_LOADING_TIME - spendTime
+                            )
                         }
                     }
                 }
-                .setNegativeButton("取消") { _, _ ->
-
-                }
+                .setNegativeButton("取消") { _, _ -> }
                 .show()
         }
 
         mRestoreAllButton.setOnClickListener {
+            mLoadingView.visibility = View.VISIBLE
+            val startTime = SystemClock.elapsedRealtime()
             showTotalSize(0)
             mRecyclerView.visibility = View.GONE
-            lifecycleScope.launch {
-                val alertDialog: AlertDialog =
-                    AlertDialog.Builder(this@RecycleBinActivity).create();
-                alertDialog.setView(
-                    LayoutInflater.from(this@RecycleBinActivity)
-                        .inflate(R.layout.view_progress_dialog, null)
-                )
-                alertDialog.setCancelable(false)
-                alertDialog.show()
-                val startTime = SystemClock.elapsedRealtime()
+            lifecycleScope.launch(Dispatchers.IO) {
+                for (photo in mAdapter.data) {
+                    photo.isDelete = false
+                    photo.isKeep = true
+                    AlbumController.getInstance(this@RecycleBinActivity)
+                        .converseDeleteToKeepPhoto(photo)
+                }
 
-                withContext(Dispatchers.IO) {
-                    for (photo in mAdapter.data) {
-                        photo.isDelete = false
-                        photo.isKeep = true
-                        AlbumController.getInstance(this@RecycleBinActivity)
-                            .converseDeleteToKeepPhoto(photo)
-                    }
-
-                    runOnUiThread {
-                        val spendTime = SystemClock.elapsedRealtime() - startTime
-                        if (spendTime < MIN_PROGRESS_TIME) {
-                            mEmptyTrashButton.postDelayed(
-                                { alertDialog.dismiss() },
-                                MIN_PROGRESS_TIME - spendTime
-                            )
-
-                        } else {
-                            alertDialog.dismiss()
-                        }
-                    }
+                runOnUiThread {
+                    val spendTime = SystemClock.elapsedRealtime() - startTime
+                    mLoadingView.postDelayed(
+                        {
+                            mLoadingView.visibility = View.GONE
+                            finish()
+                        },
+                        MIN_SHOW_LOADING_TIME - spendTime
+                    )
                 }
             }
         }

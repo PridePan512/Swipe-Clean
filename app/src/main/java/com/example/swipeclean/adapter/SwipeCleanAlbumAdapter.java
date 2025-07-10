@@ -59,6 +59,11 @@ public class SwipeCleanAlbumAdapter extends RecyclerView.Adapter<SwipeCleanAlbum
     }
 
     @Override
+    public long getItemId(int position) {
+        return mAlbums.get(position).getId();
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
         Album album = mAlbums.get(position);
@@ -74,7 +79,7 @@ public class SwipeCleanAlbumAdapter extends RecyclerView.Adapter<SwipeCleanAlbum
         int operatedCount = album.getOperatedIndex();
 
         holder.mDateTextView.setText(album.formatData);
-        holder.mProgressTextView.setText(String.format(Locale.getDefault(), "%d/%d %s", completedCunt,totalCount,"张照片" ));
+        holder.mProgressTextView.setText(String.format(Locale.getDefault(), "%d/%d %s", completedCunt, totalCount, "张照片"));
 
         //Make sure it is visible even with little progress
         holder.mProgressIndicator.setMax(103);
@@ -96,7 +101,7 @@ public class SwipeCleanAlbumAdapter extends RecyclerView.Adapter<SwipeCleanAlbum
             holder.mCompletedImageView.setVisibility(View.GONE);
             holder.mCompletedView.setVisibility(View.GONE);
             holder.mDateTextView.setTextColor(ContextCompat.getColor(context, R.color.text_main));
-            holder.mDateTextView.setPaintFlags(0);
+            holder.mDateTextView.setPaintFlags(holder.mDateTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             holder.itemView.setOnClickListener(v -> {
                 if (mListener != null) {
                     mListener.onUncompletedItemClick(album.getId());

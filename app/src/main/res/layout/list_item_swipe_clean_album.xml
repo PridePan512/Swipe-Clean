@@ -8,47 +8,39 @@
     android:foreground="@drawable/bg_cardview_foreground"
     android:paddingHorizontal="20dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_cover"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:background="@drawable/bg_shape_swipe_clean_album_cover"
+        app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/border_weak">
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:scaleType="centerCrop"
-            app:round="8dp" />
+            android:scaleType="centerCrop" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/v_completed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.6"
+            android:background="@color/black"
+            android:visibility="gone" />
 
-    <View
-        android:id="@+id/v_completed"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:alpha="0.6"
-        android:background="@drawable/bg_shape_corner_black_8"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/v_cover"
-        app:layout_constraintEnd_toEndOf="@id/v_cover"
-        app:layout_constraintStart_toStartOf="@id/v_cover"
-        app:layout_constraintTop_toTopOf="@id/v_cover" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_completed"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_vector_swipe_clean_completed_album"
+            android:visibility="gone" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_completed"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:src="@drawable/ic_vector_swipe_clean_completed_album"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/v_cover"
-        app:layout_constraintEnd_toEndOf="@id/v_cover"
-        app:layout_constraintStart_toStartOf="@id/v_cover"
-        app:layout_constraintTop_toTopOf="@id/v_cover" />
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/tv_date"
@@ -87,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tv_date"
         app:layout_constraintTop_toBottomOf="@id/tv_progress"
-        app:trackColor="@color/bg_button"
+        app:trackColor="@color/bg_progress"
         app:trackCornerRadius="3dp"
         app:trackThickness="6dp" />
 

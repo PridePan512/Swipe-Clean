@@ -33,7 +33,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.swipeclean.R
 import com.example.swipeclean.business.AlbumController
 import com.example.swipeclean.model.Album
+import com.example.swipeclean.model.Constants.DOWN_IMAGE_SCALE
+import com.example.swipeclean.model.Constants.KEY_INTENT_ALBUM_ID
+import com.example.swipeclean.model.Constants.SHOW_TAG_TRANSLATE_X
 import com.example.swipeclean.model.Photo
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,13 +47,8 @@ import kotlin.math.max
 
 class OperationActivity : AppCompatActivity() {
 
-    private val SHOW_TAG_TRANSLATE_X: Int = 200
-
-    private val DOWN_IMAGE_SCALE: Float = 0.9f
-
     private lateinit var mUpImageContainer: View
-    private lateinit var mTrashButton: View
-    private lateinit var mTrashTextView: TextView
+    private lateinit var mTrashButton: MaterialButton
     private lateinit var mDownImageView: ImageView
     private lateinit var mUpImageView: ImageView
     private lateinit var mMagnifyImageView: ImageView
@@ -59,7 +58,7 @@ class OperationActivity : AppCompatActivity() {
     private lateinit var mDeleteTextView: TextView
     private lateinit var mCountTextView: TextView
     private lateinit var mDateTextView: TextView
-    private lateinit var mCancelButton: ImageView
+    private lateinit var mCancelButton: MaterialButton
     private lateinit var mBackButton: ImageView
     private var mShowMagnifyPhotoRunnable: Runnable? = null
     private var mUpImageViewRectF: RectF? = null
@@ -109,7 +108,7 @@ class OperationActivity : AppCompatActivity() {
     private fun initView() {
         mCountTextView = findViewById(R.id.tv_count)
         mDateTextView = findViewById(R.id.tv_date)
-        mCancelButton = findViewById(R.id.iv_cancel)
+        mCancelButton = findViewById(R.id.bt_cancel)
         mBackButton = findViewById(R.id.iv_back)
         mUpImageContainer = findViewById(R.id.v_up_image)
         mUpImageView = findViewById(R.id.iv_up_image)
@@ -119,7 +118,6 @@ class OperationActivity : AppCompatActivity() {
         mKeepImageView = findViewById(R.id.iv_keep)
         mDeleteImageView = findViewById(R.id.iv_delete)
         mTrashButton = findViewById(R.id.bt_trash)
-        mTrashTextView = findViewById(R.id.tv_trash)
         mMagnifyImageView = findViewById(R.id.iv_magnify_image)
 
         val params = mMagnifyImageView.layoutParams
@@ -132,7 +130,7 @@ class OperationActivity : AppCompatActivity() {
         mTrashButton.isEnabled = false
 
         mAlbum = AlbumController.getInstance(this).albums.stream()
-            .filter { item -> item.id == intent.getLongExtra(MainActivity.KEY_INTENT_ALBUM_ID, 0) }
+            .filter { item -> item.id == intent.getLongExtra(KEY_INTENT_ALBUM_ID, 0) }
             .findFirst().orElse(null)
 
         refreshTitle()
@@ -193,7 +191,7 @@ class OperationActivity : AppCompatActivity() {
         val deleteCount: Int =
             mAlbum.photos.stream().filter { item -> item.isDelete }.count().toInt();
         mTrashButton.isEnabled = deleteCount != 0
-        mTrashTextView.text =
+        mTrashButton.text =
             String.format(
                 Locale.getDefault(),
                 "打开垃圾箱 (%d张照片) ",
@@ -206,7 +204,7 @@ class OperationActivity : AppCompatActivity() {
             this,
             RecycleBinActivity::class.java
         )
-        intent.putExtra(MainActivity.KEY_INTENT_ALBUM_ID, mAlbum.id)
+        intent.putExtra(KEY_INTENT_ALBUM_ID, mAlbum.id)
         mRecycleBinLauncher.launch(intent)
     }
 

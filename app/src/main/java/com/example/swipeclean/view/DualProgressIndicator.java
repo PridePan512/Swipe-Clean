@@ -19,7 +19,7 @@ public class DualProgressIndicator extends LinearProgressIndicator {
     public DualProgressIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
         mPaint = new Paint();
-        mPaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        mPaint.setColor(ContextCompat.getColor(context, R.color.blue_main));
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
     }

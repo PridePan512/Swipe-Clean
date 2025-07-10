@@ -39,20 +39,20 @@
             android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:textColor="@color/text_main"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_cancel"
+            app:layout_constraintEnd_toStartOf="@id/bt_cancel"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1/100" />
 
-        <ImageView
-            android:id="@+id/iv_cancel"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_vector_swipe_clean_cancel"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bt_cancel"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_vector_swipe_clean_cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/bg_color"
-        app:layout_constraintBottom_toTopOf="@id/v_trash"
+        app:layout_constraintBottom_toTopOf="@id/bt_trash"
         app:layout_constraintTop_toBottomOf="@id/v_title_bar" />
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -72,7 +72,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="26dp"
-        app:layout_constraintBottom_toTopOf="@+id/v_trash"
+        app:layout_constraintBottom_toTopOf="@+id/bt_trash"
         app:layout_constraintTop_toBottomOf="@id/v_title_bar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,7 +82,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="26dp"
         android:background="@color/bg_color"
-        app:layout_constraintBottom_toTopOf="@+id/v_trash"
+        app:layout_constraintBottom_toTopOf="@+id/bt_trash"
         app:layout_constraintTop_toBottomOf="@id/v_title_bar">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -160,52 +160,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iv_delete" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/v_trash"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_trash"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@color/bg_window"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bt_trash"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/btn_primary_color_selector"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_trash"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_vector_swipe_clean_recycle_bin_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_trash"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
-
-            <TextView
-                android:id="@+id/tv_trash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_trash"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="打开垃圾箱 (1张照片)" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="4dp"
+        app:icon="@drawable/ic_vector_swipe_clean_recycle_bin_icon"
+        app:iconGravity="textStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="打开垃圾箱 (1张照片)" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

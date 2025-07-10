@@ -8,6 +8,18 @@
     android:background="@color/bg_window"
     tools:context=".activity.RecycleBinActivity">
 
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:id="@+id/v_loading"
+        style="@style/Widget.Material3.LoadingIndicator.Contained"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/v_title_bar"
         android:layout_width="match_parent"
@@ -43,7 +55,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v_title_bar"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/v_recyclerview"
@@ -60,53 +72,26 @@
             android:background="@color/border_weak"
             app:layout_constraintBottom_toTopOf="@id/btn_empty_trash" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_empty_trash"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/btn_swipe_clean_red"
-            app:layout_constraintBottom_toTopOf="@id/btn_restore_all">
+            android:backgroundTint="@color/red_main"
+            android:text="清空垃圾箱"
+            app:icon="@drawable/ic_vector_swipe_clean_recycle_bin_icon"
+            app:iconGravity="textStart"
+            app:layout_constraintBottom_toTopOf="@id/btn_restore_all" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_empty_trash"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_vector_swipe_clean_recycle_bin_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_empty_trash"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
-
-            <TextView
-                android:id="@+id/tv_empty_trash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:text="清空垃圾箱"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_empty_trash"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_restore_all"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="12dp"
-            android:gravity="center"
             android:text="全部恢复"
             android:textColor="@color/text_sub"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/btn_empty_trash"
             app:layout_constraintStart_toStartOf="@id/btn_empty_trash" />
@@ -120,7 +105,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v_title_bar"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/v_complete_notice"
@@ -144,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="非常好"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -192,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="释放"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/blue_main"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/tv_free_up_size"
@@ -240,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="删除"
-                android:textColor="@color/blue_main"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/tv_deleted_count"
@@ -261,13 +246,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_got_it"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="12dp"
-            android:background="@drawable/btn_primary_color"
             android:text="完成"
             app:layout_constraintBottom_toBottomOf="parent" />
 
