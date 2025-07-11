@@ -54,12 +54,12 @@ public class AlbumController {
 
     @WorkerThread
     public void cleanCompletedPhoto(Photo photo) {
-        mCompletedPhotoDao.deleteCompletedPhoto(photo.id);
+        mCompletedPhotoDao.deleteCompletedPhoto(photo.getId());
     }
 
     @WorkerThread
     public void converseDeleteToKeepPhoto(Photo photo) {
-        mCompletedPhotoDao.converseDeleteToKeepPhoto(photo.id);
+        mCompletedPhotoDao.converseDeleteToKeepPhoto(photo.getId());
     }
 
     @WorkerThread
@@ -110,7 +110,7 @@ public class AlbumController {
                 boolean isDelete = !isKeep && deleteIds.contains(id);
 
                 Photo photo = new Photo(id, displayName, path, dateTaken == 0 ? dateAdded * 1000 : dateTaken, width, height, size, isKeep, isDelete);
-                String month = new SimpleDateFormat("MMMM, yyyy", Locale.getDefault()).format(photo.date);
+                String month = new SimpleDateFormat("MMMM, yyyy", Locale.getDefault()).format(photo.getDate());
 
                 if (!albums.containsKey(month)) {
                     albums.put(month, new Album(new ArrayList<>(), month));

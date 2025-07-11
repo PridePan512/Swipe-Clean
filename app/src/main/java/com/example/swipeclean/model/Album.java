@@ -21,10 +21,10 @@ public class Album {
         }
         Photo photo = mPhotos.stream().filter(item -> !item.isOperated()).findFirst().orElse(null);
         if (photo == null) {
-            return mPhotos.get(mPhotos.size() - 1).path;
+            return mPhotos.get(mPhotos.size() - 1).getPath();
 
         } else {
-            return photo.path;
+            return photo.getPath();
         }
     }
 
@@ -37,7 +37,7 @@ public class Album {
     }
 
     public long getDateTime() {
-        return mPhotos == null || mPhotos.isEmpty() ? 0 : mPhotos.get(0).date;
+        return mPhotos == null || mPhotos.isEmpty() ? 0 : mPhotos.get(0).getDate();
     }
 
     public int getTotalCount() {
@@ -45,7 +45,7 @@ public class Album {
     }
 
     public int getCompletedCount() {
-        return (int) mPhotos.stream().filter(photo -> photo.isKeep).count();
+        return (int) mPhotos.stream().filter(Photo::isKeep).count();
     }
 
     public int getOperatedIndex() {

@@ -46,7 +46,7 @@ public class SwipeCleanRecycleBinAdapter extends RecyclerView.Adapter<SwipeClean
             return 0;
         }
 
-        return mPhotos.stream().mapToLong(photo -> photo.size).sum();
+        return mPhotos.stream().mapToLong(Photo::getSize).sum();
     }
 
     public List<Photo> getData() {
@@ -67,7 +67,7 @@ public class SwipeCleanRecycleBinAdapter extends RecyclerView.Adapter<SwipeClean
 
         Glide
                 .with(context)
-                .load(photo.path)
+                .load(photo.getPath())
                 .error(R.drawable.ic_vector_doc_image)
                 .into(holder.mPhotoImageView);
 

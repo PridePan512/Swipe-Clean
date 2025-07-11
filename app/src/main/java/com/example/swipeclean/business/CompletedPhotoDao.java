@@ -63,9 +63,9 @@ public class CompletedPhotoDao extends BaseDao {
     @WorkerThread
     public void addDeletePhoto(Photo photo) {
         ContentValues values = new ContentValues();
-        values.put(CompletedPhotoTable.Columns.SOURCE_PATH, photo.path);
-        values.put(CompletedPhotoTable.Columns.SOURCE_ID, photo.id);
-        values.put(CompletedPhotoTable.Columns.SIZE, photo.size);
+        values.put(CompletedPhotoTable.Columns.SOURCE_PATH, photo.getPath());
+        values.put(CompletedPhotoTable.Columns.SOURCE_ID, photo.getId());
+        values.put(CompletedPhotoTable.Columns.SIZE, photo.getSize());
         values.put(CompletedPhotoTable.Columns.DELETED, 1);
         getDbHelper().getWritableDatabase().insert(CompletedPhotoTable.TABLE_NAME,
                 null,
@@ -75,9 +75,9 @@ public class CompletedPhotoDao extends BaseDao {
     @WorkerThread
     public void addKeepPhoto(Photo photo) {
         ContentValues values = new ContentValues();
-        values.put(CompletedPhotoTable.Columns.SOURCE_PATH, photo.path);
-        values.put(CompletedPhotoTable.Columns.SOURCE_ID, photo.id);
-        values.put(CompletedPhotoTable.Columns.SIZE, photo.size);
+        values.put(CompletedPhotoTable.Columns.SOURCE_PATH, photo.getPath());
+        values.put(CompletedPhotoTable.Columns.SOURCE_ID, photo.getId());
+        values.put(CompletedPhotoTable.Columns.SIZE, photo.getSize());
         values.put(CompletedPhotoTable.Columns.DELETED, 0);
         getDbHelper().getWritableDatabase().insert(CompletedPhotoTable.TABLE_NAME,
                 null,
